@@ -13,26 +13,28 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/lottojs/params-parser">
+  <a href="https://github.com/lottojs/cors">
     <img src=".github/logo.png" alt="Logo" width="100" height="115">
   </a>
 
-  <h3 align="center">@lottojs/params-parser</h3>
+  <h3 align="center">@lottojs/cors</h3>
 
   <p align="center">
-    NodeJS HTTP Request path and query parameters parser.
+    NodeJS HTTP CORS Middleware for secure cross-origin resource sharing.
     <br />
     <br />
-    <a href="https://github.com/lottojs/params-parser/issues">Report Bug</a>
+    <a href="https://github.com/lottojs/cors/issues">Report Bug</a>
     ·
-    <a href="https://github.com/lottojs/params-parser/issues">Request Feature</a>
+    <a href="https://github.com/lottojs/cors/issues">Request Feature</a>
   </p>
 </div>
 
 
 ## About The Project
 
-HTTP Middleware done to parse query and path parameters from a given url, initially created to serve the [@lottojs/router](https://github.com/lottojs/router) package but nothing excludes it to be also used by the community.
+
+A CORS middleware designed to enhance security by enabling secure cross-origin resource sharing in Node.js applications. Initially created to serve the [@lottojs/lotto](https://github.com/lottojs/lotto) package but nothing excludes it to be also used by the community.
+
 
 ## Documentation
 Complete API documentation is available at [lottojs.tech][documentation-url].
@@ -41,19 +43,32 @@ Complete API documentation is available at [lottojs.tech][documentation-url].
 
 ### Installation
    ```sh
-    npm i @lottojs/params-parser
+    npm i @lottojs/cors
    ```
 ### Usage
-It will depend on your scenario, basically the package exports a middleware called `paramsParser`. This middleware can be used receiving a path from any http handler and  returns a promise awaiting to receive a request and next parameters. On the end it put's each parsed group on the right place, query parameters at `req.query` object and path parameters at `req.params` object, all ready to be used.
+The package exports a middleware named `cors`. This middleware should be used within an HTTP server handler. It checks the request's origin and sets the appropriate CORS headers. This allows or restricts cross-origin requests based on the specified configuration.
+
 
 ```typescript
     import { createServer } from 'node:http';
-    import { paramsParser } from '@lottojs/params-parser';
+    import { cors } from '@lottojs/cors';
 
     createServer(
         async (req: IncomingMessage, res: ServerResponse) => {
                 ...
-                paramsParser(req.url)(req, next())
+                const allowedSites = ['http://localhost:3000']
+                const allowedMethods = ['GET', 'POST']
+                const allowedHeaders = ['Content-Type', 'Authorization']
+                const exposeHeaders = ['Content-Length']
+                const allowCredentials = true
+
+                cors(
+                    allowedSites,
+                    allowedMethods,
+                    allowedHeaders,
+                    exposeHeaders,
+                    allowCredentials
+                )(req, res, next())
                 ...
         },
     )
@@ -77,16 +92,16 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/lottojs/params-parser.svg?style=for-the-badge
-[contributors-url]: https://github.com/lottojs/params-parser/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/lottojs/params-parser.svg?style=for-the-badge
-[forks-url]: https://github.com/lottojs/params-parser/network/members
-[stars-shield]: https://img.shields.io/github/stars/lottojs/params-parser.svg?style=for-the-badge
-[stars-url]: https://github.com/lottojs/params-parser/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lottojs/params-parser.svg?style=for-the-badge
-[issues-url]: https://github.com/lottojs/params-parser/issues
-[license-shield]: https://img.shields.io/github/license/lottojs/params-parser.svg?style=for-the-badge
-[license-url]: https://github.com/lottojs/params-parser/blob/master/LICENSE.txt
-[npm-shield]: https://img.shields.io/npm/v/@lottojs/params-parser?style=for-the-badge&logo=npm&logoColor=FFFFFF&labelColor=555555&color=CB0001
-[npm-url]: https://www.npmjs.com/package/@lottojs/params-parser
+[contributors-shield]: https://img.shields.io/github/contributors/lottojs/cors.svg?style=for-the-badge
+[contributors-url]: https://github.com/lottojs/cors/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/lottojs/cors.svg?style=for-the-badge
+[forks-url]: https://github.com/lottojs/cors/network/members
+[stars-shield]: https://img.shields.io/github/stars/lottojs/cors.svg?style=for-the-badge
+[stars-url]: https://github.com/lottojs/cors/stargazers
+[issues-shield]: https://img.shields.io/github/issues/lottojs/cors.svg?style=for-the-badge
+[issues-url]: https://github.com/lottojs/cors/issues
+[license-shield]: https://img.shields.io/github/license/lottojs/cors.svg?style=for-the-badge
+[license-url]: https://github.com/lottojs/cors/blob/master/LICENSE.txt
+[npm-shield]: https://img.shields.io/npm/v/@lottojs/cors?style=for-the-badge&logo=npm&logoColor=FFFFFF&labelColor=555555&color=CB0001
+[npm-url]: https://www.npmjs.com/package/@lottojs/cors
 [documentation-url]: https://lottojs.tech

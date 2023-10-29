@@ -13,10 +13,18 @@ export function cors(
     allowedSites?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[],
+    exposeHeaders?: string[],
+    allowCredentials?: boolean,
 ): Middleware {
-    const { apply } = new Cors(allowedSites, allowedMethods, allowedHeaders)
+    const corInstance = new Cors(
+        allowedSites,
+        allowedMethods,
+        allowedHeaders,
+        exposeHeaders,
+        allowCredentials,
+    )
 
     return async ({ req, res, next }: Context) => {
-        await apply(req, res, next)
+        corInstance.apply({ req, res, next })
     }
 }
