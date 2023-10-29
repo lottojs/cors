@@ -1,49 +1,59 @@
-import { NextFunction, Request, Response } from '@core/types'
+import { Context } from '@core/types'
 
-export interface AbstractCors {
-    apply: (req: Request, res: Response, next: NextFunction) => Promise<void>
-}
-
-export class Cors implements AbstractCors {
-    private allowedSites: string[]
+export class Cors {
+    private allowedOrigins: string[]
     private allowedMethods: string[]
     private allowedHeaders: string[]
+    private exposeHeaders: string[]
+    private allowCredentials: boolean
 
     constructor(
-        allowedSites = [''],
-        allowedMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders = ['Content-Type', 'Authorization'],
+        allowedOrigins: string[] = ['*'],
+        allowedMethods: string[] = [
+            'GET',
+            'POST',
+            'PUT',
+            'PATCH',
+            'DELETE',
+            'OPTIONS',
+        ],
+        allowedHeaders: string[] = ['Content-Type', 'Authorization'],
+        exposeHeaders: string[] = ['Content-Length'],
+        allowCredentials = true,
     ) {
-        this.allowedSites = allowedSites
+        this.allowedOrigins = allowedOrigins
         this.allowedMethods = allowedMethods
         this.allowedHeaders = allowedHeaders
+        this.exposeHeaders = exposeHeaders
+        this.allowCredentials = allowCredentials
     }
 
-    /**
-     * Apply cors headers.
-     * @param req Request
-     * @param res Response
-     * @param next NextFunction
-     */
-    public async apply(
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ): Promise<void> {
-        const origin = req.headers.origin!
+    apply({ req, res, next }: Context): void {
+        const origin = req.headers.origin
 
-        if (this.allowedSites.includes(origin)) {
-            res.setHeader('Access-Control-Allow-Origin', origin)
+        if (
+            this.allowedOrigins.includes('*') ||
+            this.allowedOrigins.includes(origin as string)
+        ) {
+            res.setHeader('Access-Control-Allow-Origin', origin as string)
+
+            res.setHeader(
+                'Access-Control-Allow-Methods',
+                this.allowedMethods.join(', '),
+            )
+            res.setHeader(
+                'Access-Control-Allow-Headers',
+                this.allowedHeaders.join(', '),
+            )
+            res.setHeader(
+                'Access-Control-Expose-Headers',
+                this.exposeHeaders.join(', '),
+            )
+            res.setHeader(
+                'Access-Control-Allow-Credentials',
+                String(this.allowCredentials),
+            )
         }
-
-        res.setHeader(
-            'Access-Control-Allow-Methods',
-            this.allowedMethods.join(', '),
-        )
-        res.setHeader(
-            'Access-Control-Allow-Headers',
-            this.allowedHeaders.join(', '),
-        )
 
         if (req.method === 'OPTIONS') {
             res.writeHead(200)
