@@ -1,6 +1,6 @@
 {
     "name": "@lottojs/cors",
-    "version": "0.1.1",
+    "version": "0.2.5",
     "description": "Custom HTTP CORS middleware to manage Cross-Origin Resource Sharing (CORS) headers and methods",
     "author": "Pedro Harbs <harbspj@gmail.com>",
     "license": "MIT",

@@ -71,3 +71,11 @@ export type Context = {
 }
 
 export type Middleware = (ctx: Context) => void
+
+export interface CorsObject {
+    allowedOrigins?: string[]
+    allowedMethods?: string[]
+    allowedHeaders?: string[]
+    exposeHeaders?: string[]
+    allowCredentials?: boolean
+}
